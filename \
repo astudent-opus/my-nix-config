@@ -1,0 +1,56 @@
+{ config, pkgs, ... }:
+
+{
+  imports = [ ];
+
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  networking.hostName = "nixos";
+
+  # Enable networking
+  networking.networkmanager.enable = true;
+
+  # Set your time zone
+  time.timeZone = "Asia/Ho_Chi_Minh";
+
+  # Internationalisation
+  i18n.defaultLocale = "en_US.UTF-8";
+  console.keyMap = "us";
+
+  # X11 not needed since you’re using Hyprland
+  services.xserver.enable = false;
+
+  # PipeWire (modern audio)
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+
+  # Users
+  users.users.huyen = {
+    isNormalUser = true;
+    description = "Nguyen Huyen";
+    extraGroups = [ "networkmanager" "wheel" ]; # wheel = sudo
+  };
+
+  # Allow unfree packages (like VSCode, some fonts, etc.)
+  nixpkgs.config.allowUnfree = true;
+
+  # System packages
+  environment.systemPackages = with pkgs; [
+    git
+    vim
+    kitty
+    hyprland
+    waybar
+    wofi
+    firefox
+  ];
+
+  # Enable flakes
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+}
+
